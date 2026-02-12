@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { FragranceGuidance } from "../types";
+import { FragranceGuidance, DiffusionIntensity } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
@@ -13,17 +13,17 @@ export const getFragranceGuidance = async (
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Provide luxury fragrance guidance for wearing '${fragranceName}' at ${timeOfDay} with ${weather} weather. 
-      Also provide a full-day journey outlook for the Top, Heart, and Base notes.
-      Follow the luxury brand tone: intelligent, poetic, and reassuring.`,
+      Provide a full-day journey outlook for the Top, Heart, and Base notes.
+      Include a "ritual" (a poetic 3-5 word action) and an "intensityRecommendation" (SOFT, BALANCED, or EXPRESSIVE) for each stage.`,
       config: {
-        systemInstruction: "You are a Master Perfumer's AI assistant for a luxury brand. You never use tech jargon. You speak in poetic, sensorial terms. You suggest, never automate. For the journey, provide one sentence of guidance and one word for the 'feeling' for each stage (Top, Heart, Base).",
+        systemInstruction: "You are a Master Perfumer's AI. Speak in poetic, sensorial terms. Never use tech jargon. Suggest rituals that feel like luxury self-care.",
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            tone: { type: Type.STRING, description: "A single word reflecting the emotional tone now." },
-            poeticSuggestion: { type: Type.STRING, description: "A short, poetic sentence about how the fragrance feels now." },
-            why: { type: Type.STRING, description: "A brief explanation of why this fits the current context." },
+            tone: { type: Type.STRING },
+            poeticSuggestion: { type: Type.STRING },
+            why: { type: Type.STRING },
             journey: {
               type: Type.OBJECT,
               properties: {
@@ -31,25 +31,31 @@ export const getFragranceGuidance = async (
                   type: Type.OBJECT, 
                   properties: { 
                     guidance: { type: Type.STRING },
-                    feeling: { type: Type.STRING }
+                    feeling: { type: Type.STRING },
+                    intensityRecommendation: { type: Type.STRING },
+                    ritual: { type: Type.STRING }
                   },
-                  required: ["guidance", "feeling"]
+                  required: ["guidance", "feeling", "intensityRecommendation", "ritual"]
                 },
                 heart: { 
                   type: Type.OBJECT, 
                   properties: { 
                     guidance: { type: Type.STRING },
-                    feeling: { type: Type.STRING }
+                    feeling: { type: Type.STRING },
+                    intensityRecommendation: { type: Type.STRING },
+                    ritual: { type: Type.STRING }
                   },
-                  required: ["guidance", "feeling"]
+                  required: ["guidance", "feeling", "intensityRecommendation", "ritual"]
                 },
                 base: { 
                   type: Type.OBJECT, 
                   properties: { 
                     guidance: { type: Type.STRING },
-                    feeling: { type: Type.STRING }
+                    feeling: { type: Type.STRING },
+                    intensityRecommendation: { type: Type.STRING },
+                    ritual: { type: Type.STRING }
                   },
-                  required: ["guidance", "feeling"]
+                  required: ["guidance", "feeling", "intensityRecommendation", "ritual"]
                 }
               },
               required: ["top", "heart", "base"]
@@ -63,15 +69,14 @@ export const getFragranceGuidance = async (
     return JSON.parse(response.text.trim());
   } catch (error) {
     console.error("Guidance Error:", error);
-    // Fallback data
     return {
       tone: "Balanced",
       poeticSuggestion: "Your fragrance evolves gracefully with you.",
-      why: "The natural progression of the perfume's heart notes provides a steady presence.",
+      why: "The natural progression of the perfume provides a steady presence.",
       journey: {
-        top: { guidance: "Awaken with the bright, ephemeral citrus opening.", feeling: "Luminous" },
-        heart: { guidance: "The floral core blossoms as the day finds its rhythm.", feeling: "Centered" },
-        base: { guidance: "Rich woods and amber emerge as shadows lengthen.", feeling: "Enveloping" }
+        top: { guidance: "The bright, ephemeral citrus opening awakens.", feeling: "Luminous", intensityRecommendation: DiffusionIntensity.BALANCED, ritual: "Face the morning sun" },
+        heart: { guidance: "The floral core blossoms as the day finds its rhythm.", feeling: "Centered", intensityRecommendation: DiffusionIntensity.BALANCED, ritual: "Take a deep breath" },
+        base: { guidance: "Rich woods and amber emerge as shadows lengthen.", feeling: "Enveloping", intensityRecommendation: DiffusionIntensity.SOFT, ritual: "Seek quiet reflection" }
       }
     };
   }

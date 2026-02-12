@@ -10,32 +10,83 @@ import Profile from './views/Profile';
 import { Navbar } from './components/Navbar';
 
 const MOCK_FRAGRANCE: Fragrance = {
-  id: 'santal-01',
-  name: 'Santal Parfum',
-  brand: 'YSL Luxury',
+  id: 'ysl-libre-01',
+  name: 'Libre Eau de Parfum',
+  brand: 'YVES SAINT LAURENT',
   notes: [
-    { level: 'Top', name: 'Cardamom', description: 'Bright and spicy opening' },
-    { level: 'Heart', name: 'Iris & Papyrus', description: 'The powdery, woody core' },
-    { level: 'Base', name: 'Sandalwood & Leather', description: 'Deep, enveloping warmth' }
+    { 
+      level: 'Top', 
+      name: 'Diva Lavender', 
+      description: 'A fresh, floral lavender from Provence.',
+      sourcing: {
+        origin: 'Provence, France',
+        sustainabilityScore: 94,
+        ethicalPractices: ['Eco-designed harvesting', 'Biodiversity protection'],
+        story: 'Sourced from the high plateaus of Provence, this lavender is a tension between the masculine and feminine.',
+        methods: 'Grown using low-input agriculture and mechanical harvesting techniques that protect the local ecosystem.',
+        communityImpact: 'Part of YSL’s commitment to supporting generational farming families in the Drôme region.',
+        certifications: ['Fair For Life', 'For Life Social Responsibility'],
+        journeySteps: [
+          { title: 'Cultivation', description: 'Grown at 800m altitude in the heart of Provence.' },
+          { title: 'Harvest', description: 'Steam-distilled within 24 hours of picking to preserve the Diva essence.' },
+          { title: 'Refinement', description: 'Exclusive molecular distillation to remove camphoric notes.' }
+        ]
+      }
+    },
+    { 
+      level: 'Heart', 
+      name: 'Orange Blossom', 
+      description: 'The burning heart of the fragrance.',
+      sourcing: {
+        origin: 'Ourika Gardens, Morocco',
+        sustainabilityScore: 98,
+        ethicalPractices: ['Regenerative Agriculture', 'Women Empowerment'],
+        story: 'The Ourika Community Gardens are a pioneering social program for the brand.',
+        methods: 'Irrigated using traditional "Seguia" methods and solar energy to ensure zero-carbon cultivation.',
+        communityImpact: 'Directly supports a cooperative of 32 local women, providing financial independence and literacy programs.',
+        certifications: ['Fair Trade Moroccan Origin', 'Regenerative Organic Certified'],
+        journeySteps: [
+          { title: 'Hand-Picking', description: 'Flowers are picked individually by hand at dawn.' },
+          { title: 'Transformation', description: 'Cold-pressed extraction in the Atlas foothills.' },
+          { title: 'Provenance', description: 'Traceable to the specific garden plot within the Ourika valley.' }
+        ]
+      }
+    },
+    { 
+      level: 'Base', 
+      name: 'Vanilla Bourbon', 
+      description: 'Sultry, deep, and enveloping.',
+      sourcing: {
+        origin: 'Sava Region, Madagascar',
+        sustainabilityScore: 91,
+        ethicalPractices: ['Traceable Sourcing', 'Reforestation'],
+        story: 'Exceptional vanilla beans from the SAVA region, hand-selected for their balsamic profile.',
+        methods: 'Pollination is done entirely by hand, followed by a long, traditional curing process.',
+        communityImpact: 'YSL funds local primary schools and health centers for over 10,000 community members in Madagascar.',
+        certifications: ['UEBT Certified', 'Fair Trade Madagascar'],
+        journeySteps: [
+          { title: 'Pollination', description: 'Individual flowers are hand-pollinated during a 4-hour window.' },
+          { title: 'Curing', description: 'Sweating and sun-drying for 6 months to develop over 200 aromatic compounds.' },
+          { title: 'Extraction', description: 'CO2 extraction for a creamy, textured vanilla absolute.' }
+        ]
+      }
+    }
   ],
-  moods: ['Elegant', 'Enigmatic', 'Confident'],
-  description: 'A study in sandalwood, ethically harvested and distilled with precision.',
-  story: 'Inspired by the silence of high-altitude forests at dawn.',
+  moods: ['Liberated', 'Powerful', 'Sensual'],
+  description: 'The fragrance of freedom. A floral lavender scent that balances cool and warm.',
+  story: 'Libre represents the tension between the masculine lavender and the feminine orange blossom.',
   intensity: DiffusionIntensity.BALANCED,
-  remainingPercentage: 82
+  remainingPercentage: 78
 };
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.ONBOARDING);
   const [activeFragrance, setActiveFragrance] = useState<Fragrance | null>(null);
 
-  // Persistence logic (simplified)
   useEffect(() => {
     const savedFragrance = localStorage.getItem('activeFragrance');
     if (savedFragrance) {
       setActiveFragrance(JSON.parse(savedFragrance));
-      // If we have a fragrance, we can skip onboarding if desired
-      // For this demo, we start at onboarding for the full experience
     }
   }, []);
 
