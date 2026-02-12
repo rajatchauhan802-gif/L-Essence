@@ -1,0 +1,7 @@
+{
+  "name": "L'Essence - Luxury Fragrance Ecosystem",
+  "description": "A luxury-grade companion for the smart fragrance bracelet, focusing on ritual, emotional continuity, and the craftsmanship of fine perfume.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
